@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Inject } from '@nestjs/common';
 import { SQSEvent, SQSRecord } from 'aws-lambda';
 import { RdsRepository } from '../../infrastructure/rds/rds.repository';
 import { EventsService } from '../../events/events.service';
@@ -9,8 +9,8 @@ export class WorkerService {
   private readonly logger = new Logger(WorkerService.name);
 
   constructor(
-    private readonly rdsRepository: RdsRepository,
-    private readonly eventsService: EventsService,
+    @Inject(RdsRepository) private readonly rdsRepository: RdsRepository,
+    @Inject(EventsService) private readonly eventsService: EventsService,
   ) {}
 
   async processSqsEvent(event: SQSEvent): Promise<void> {
@@ -44,7 +44,7 @@ export class WorkerService {
         await this.rdsRepository.updateStatus(orderId, OrderStatus.FAILED).catch(() => null);
         await this.eventsService.recordEvent({ orderId, type: 'ORDER_FAILED', timestamp: new Date().toISOString() }).catch(() => null);
       }
-      throw error; // SQS retry
+      throw error;
     }
   }
 

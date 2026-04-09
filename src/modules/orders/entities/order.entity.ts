@@ -12,15 +12,15 @@ export class Order {
   @PrimaryColumn('uuid')
   id: string;
 
-  @Column()
+  @Column('varchar')
   product: string;
 
   @Column('int')
   quantity: number;
 
-  @Column({ type: 'enum', enum: OrderStatus, default: OrderStatus.PENDING })
+  @Column({ type: 'varchar', enum: OrderStatus, default: OrderStatus.PENDING })
   status: OrderStatus;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 }
