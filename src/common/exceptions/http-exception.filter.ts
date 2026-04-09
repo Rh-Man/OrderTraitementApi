@@ -19,6 +19,12 @@ export class AllExceptionsFilter implements ExceptionFilter {
       : 'Internal server error';
 
     this.logger.error(`${request.method} ${request.url} → ${status}`);
+    if (exception instanceof Error) {
+      this.logger.error(`Error: ${exception.message}`);
+      this.logger.error(`Stack: ${exception.stack}`);
+    } else {
+      this.logger.error(`Exception: ${JSON.stringify(exception)}`);
+    }
 
     response.status(status).json({
       statusCode: status,

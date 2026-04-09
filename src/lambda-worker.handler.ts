@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { AppWorkerModule } from './app.worker.module';
 import { WorkerService } from './modules/worker/worker.service';

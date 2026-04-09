@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, Inject } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { OrderStatus } from './entities/order.entity';
@@ -11,9 +11,9 @@ export class OrdersService {
   private readonly logger = new Logger(OrdersService.name);
 
   constructor(
-    private readonly rdsRepository: RdsRepository,
-    private readonly eventsService: EventsService,
-    private readonly sqsService: SqsService,
+    @Inject(RdsRepository) private readonly rdsRepository: RdsRepository,
+    @Inject(EventsService) private readonly eventsService: EventsService,
+    @Inject(SqsService) private readonly sqsService: SqsService,
   ) {}
 
   async createOrder(dto: CreateOrderDto): Promise<{ orderId: string; status: string }> {
@@ -42,5 +42,9 @@ export class OrdersService {
     const order = await this.rdsRepository.findById(orderId);
     if (!order) throw new NotFoundException(`Order ${orderId} not found`);
     return order;
+  }
+
+  async getAllOrders() {
+    return this.rdsRepository.findAll();
   }
 }

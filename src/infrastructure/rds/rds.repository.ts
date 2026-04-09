@@ -19,6 +19,10 @@ export class RdsRepository {
     return this.repo.findOne({ where: { id } });
   }
 
+  async findAll(): Promise<Order[]> {
+    return this.repo.find({ order: { created_at: 'DESC' } });
+  }
+
   async updateStatus(id: string, status: OrderStatus): Promise<void> {
     await this.repo.update(id, { status });
   }
