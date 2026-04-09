@@ -285,7 +285,7 @@ export class OrderManagementStack extends cdk.Stack {
     });
 
     new cdk.CfnOutput(this, 'DashboardUrl', {
-      value: `https://console.aws.amazon.com/cloudwatch/home?region=${this.region}#dashboards:name=Orders-Monitoring`,
+      value: `https://console.aws.amazon.com/cloudwatch/home?region=${cdk.Stack.of(this).region}#dashboards:name=Orders-Monitoring`,
       description: 'CloudWatch Dashboard URL',
     });
   }
